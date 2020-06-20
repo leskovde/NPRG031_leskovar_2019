@@ -22,18 +22,18 @@ namespace CodeWars.Forms
     // každá instukce má tento vzor
     public abstract class Instruction
     {
-        protected Instructions id;
-        public readonly Player player;
-        public readonly int mainStat;
+        protected Instructions Id;
+        public readonly Player Player;
+        public readonly int MainStat;
 
         protected Instruction(int value, Player instance)
         {
-            player = instance;
-            mainStat = value;
+            Player = instance;
+            MainStat = value;
         }
         public Instructions GetId()
         {
-            return id;
+            return Id;
         }
     }
 
@@ -43,70 +43,70 @@ namespace CodeWars.Forms
     {
         public Ahead(int speed, Player instance) : base(speed, instance)
         {
-            id = Instructions.Ahead;
+            Id = Instructions.Ahead;
         }
     }
     public class Back : Instruction // pohyb vzad
     {
         public Back(int speed, Player instance) : base(speed, instance)
         {
-            id = Instructions.Back;
+            Id = Instructions.Back;
         }
     }
     public class TurnLeft : Instruction // otočení vozidla podle hodinových ručiček
     {
         public TurnLeft(int speed, Player instance) : base(speed, instance)
         {
-            id = Instructions.Left;
+            Id = Instructions.Left;
         }
     }
     public class TurnRight : Instruction // otočení vozidla proti hodinovým ručičkám
     {
         public TurnRight(int speed, Player instance) : base(speed, instance)
         {
-            id = Instructions.Right;
+            Id = Instructions.Right;
         }
     }
     public class Fire : Instruction // střelba
     {
         public Fire(int projSpeed, Player instance) : base(projSpeed, instance)
         {
-            id = Instructions.Fire;
+            Id = Instructions.Fire;
         }
     }
     public class GunLeft : Instruction // otočení děla podle hodinových ručiček
     {
         public GunLeft(int degree, Player instance) : base(degree, instance)
         {
-            id = Instructions.GunLeft;
+            Id = Instructions.GunLeft;
         }
     }
     public class GunRight : Instruction // otočení děla proti hodinovým ručičkám
     {
         public GunRight(int degree, Player instance) : base(degree, instance)
         {
-            id = Instructions.GunRight;
+            Id = Instructions.GunRight;
         }
     }
     public class RadarLeft : Instruction // otočení radaru podle hodinových ručiček
     {
         public RadarLeft(int degree, Player instance) : base(degree, instance)
         {
-            id = Instructions.RadarLeft;
+            Id = Instructions.RadarLeft;
         }
     }
     public class RadarRight : Instruction // otočení radaru proti hodinovým ručičkám
     {
         public RadarRight(int degree, Player instance) : base(degree, instance)
         {
-            id = Instructions.RadarRight;
+            Id = Instructions.RadarRight;
         }
     }
     public class GameOver : Instruction // vyřazení zničeného robota - konec hry pro jednoho z hráčů
     {
         public GameOver(int speed, Player instance) : base(speed, instance)
         {
-            id = Instructions.GameOver;
+            Id = Instructions.GameOver;
         }
     }
 }

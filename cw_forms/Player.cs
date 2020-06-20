@@ -11,102 +11,102 @@ namespace CodeWars.Forms
     // vzorová třída pro případnou variabilitu robotů
     public class Player
     {
-        private readonly Bitmap bitmapBody, bitmapGun, bitmapRadar;
+        private readonly Bitmap _bitmapBody, _bitmapGun, _bitmapRadar;
 
         // reprezentace ve Forms
-        private readonly PictureBox body, gun, radar, healthBar, healthRemaining;
+        private readonly PictureBox _body, _gun, _radar, _healthBar, _healthRemaining;
 
         // atributy jako např. zdraví, rychlost, ...
 
-        private readonly int maxHealth;
-        private readonly Point spawnPoint; // souřadnice, na kterých se ve formuláři instance třídy objeví
+        private readonly int _maxHealth;
+
+        private readonly int _name;
+        private readonly Point _spawnPoint; // souřadnice, na kterých se ve formuláři instance třídy objeví
 
         // fronta složitých instrukcí daného robota
-        public Queue<Instruction> complexQueue;
+        public Queue<Instruction> ComplexQueue;
 
-        private int name,
-            currHealth,
-            maxSpeed,
-            xSpeed,
-            ySpeed,
-            bodyOrientation,
-            gunOrientation,
-            radarOrientation,
+        private int _currHealth,
+            _maxSpeed,
+            _xSpeed,
+            _ySpeed,
+            _bodyOrientation,
+            _gunOrientation,
+            _radarOrientation,
             //projDamage,
-            lastSpottedX,
-            lastSpottedY,
-            lastSpottedOrientation;
+            _lastSpottedX,
+            _lastSpottedY,
+            _lastSpottedOrientation;
 
         // fronta jednoduchých instrukcí daného robota
-        public Queue<Instruction> instructionQueue;
+        public Queue<Instruction> InstructionQueue;
 
         // konstruktor pro vytvoření a vykreslení instance do formuláře
         public Player(Control form, CwForm.EntireRobot robot, int health)
         {
             var r = new Random();
 
-            maxHealth = health;
-            currHealth = health;
-            maxSpeed = 3;
+            _maxHealth = health;
+            _currHealth = health;
+            _maxSpeed = 3;
 
             // pro další vývoj je zde možnost nastavení zbylých atributů
 
             // dynamické vytvoření prvků formuláře a přiřazení ze vzoru
             var nameLabel = new Label();
 
-            body = PicBoxAssign(form, robot, "body");
-            gun = PicBoxAssign(form, robot, "gun");
-            radar = PicBoxAssign(form, robot, "radar");
-            healthBar = PicBoxAssign(form, robot, "healthBar");
-            healthRemaining = PicBoxAssign(form, robot, "healthRemaining");
+            _body = PicBoxAssign(form, robot, "body");
+            _gun = PicBoxAssign(form, robot, "gun");
+            _radar = PicBoxAssign(form, robot, "radar");
+            _healthBar = PicBoxAssign(form, robot, "healthBar");
+            _healthRemaining = PicBoxAssign(form, robot, "healthRemaining");
 
             // vytvoření náhodného bodu, na kterém se instance při začátku hry objeví
             while (true)
             {
                 var finalPoint = true;
-                spawnPoint = new Point(
-                    r.Next(CwForm.WorldInfo.LeftOfTheWorld, CwForm.WorldInfo.RightOfTheWorld - body.Size.Width),
-                    r.Next(CwForm.WorldInfo.TopOfTheWorld, CwForm.WorldInfo.BottomOfTheWorld - body.Size.Height));
-                foreach (var others in CwForm.playerList) // pokud jsou roboti příliš blízko, generujeme nový bod
-                    if (Math.Abs(spawnPoint.X - others.spawnPoint.X) < 250 &&
-                        Math.Abs(spawnPoint.Y - others.spawnPoint.Y) < 250)
+                _spawnPoint = new Point(
+                    r.Next(CwForm.WorldInfo.LeftOfTheWorld, CwForm.WorldInfo.RightOfTheWorld - _body.Size.Width),
+                    r.Next(CwForm.WorldInfo.TopOfTheWorld, CwForm.WorldInfo.BottomOfTheWorld - _body.Size.Height));
+                foreach (var others in CwForm.PlayerList) // pokud jsou roboti příliš blízko, generujeme nový bod
+                    if (Math.Abs(_spawnPoint.X - others._spawnPoint.X) < 250 &&
+                        Math.Abs(_spawnPoint.Y - others._spawnPoint.Y) < 250)
                         finalPoint = false;
 
                 if (!finalPoint) continue;
                 // pokud je bod ve vzdálenosti alespoň 250 jednotek od všech ostatních robotů, nastavíme jeho pozici
-                body.Location = spawnPoint;
+                _body.Location = _spawnPoint;
                 break;
             }
 
             // ukotvení jednotlivých prvků k sobě, aby se společně hýbaly, navíc řeší překrytí prvků
             // (které původně nemohou být vidět přes neprůhledné pozadí)
-            healthBar.Location = new Point(body.Location.X - 20, body.Location.Y - 20);
-            bitmapBody = (Bitmap) body.Image;
-            bitmapGun = (Bitmap) gun.Image;
-            bitmapRadar = (Bitmap) radar.Image;
+            _healthBar.Location = new Point(_body.Location.X - 20, _body.Location.Y - 20);
+            _bitmapBody = (Bitmap) _body.Image;
+            _bitmapGun = (Bitmap) _gun.Image;
+            _bitmapRadar = (Bitmap) _radar.Image;
 
-            body.Controls.Add(gun);
-            gun.Location = new Point(0, 0);
-            gun.BackColor = Color.Transparent;
+            _body.Controls.Add(_gun);
+            _gun.Location = new Point(0, 0);
+            _gun.BackColor = Color.Transparent;
 
-            gun.Controls.Add(radar);
-            radar.Location = new Point(12, 12);
-            radar.BackColor = Color.Transparent;
+            _gun.Controls.Add(_radar);
+            _radar.Location = new Point(12, 12);
+            _radar.BackColor = Color.Transparent;
 
-            healthBar.Controls.Add(healthRemaining);
-            healthRemaining.Location = new Point(0, 0);
+            _healthBar.Controls.Add(_healthRemaining);
+            _healthRemaining.Location = new Point(0, 0);
 
-            name = CwForm.playerList.Count + 1;
-            healthRemaining.Controls.Add(nameLabel);
+            _name = CwForm.PlayerList.Count + 1;
+            _healthRemaining.Controls.Add(nameLabel);
             nameLabel.Location = new Point(0, 0);
-            nameLabel.Text = "P" + name;
+            nameLabel.Text = "P" + _name;
             //nameLabel.ForeColor = Color.Black;
             nameLabel.Font = new Font(nameLabel.Font, FontStyle.Bold);
             nameLabel.BackColor = Color.Transparent;
 
-            instructionQueue = new Queue<Instruction>();
-            complexQueue = new Queue<Instruction>();
-            CwForm.playerList.Add(this);
+            InstructionQueue = new Queue<Instruction>();
+            ComplexQueue = new Queue<Instruction>();
         }
 
         private static PictureBox PicBoxAssign(Control form, CwForm.EntireRobot robot, string componentName)
@@ -196,23 +196,23 @@ namespace CodeWars.Forms
 
         public PictureBox GetBody()
         {
-            return body;
+            return _body;
         }
 
         // provedení samotných instrukcí pak probíhá pomocí následujících metod
         // řešení není obecné, v tomto konkrétním případě funguje, jelikož jen měníme atributy objektu
         public void MoveForward(int speed)
         {
-            xSpeed = (int) Math.Round(speed * Math.Cos(Program.DegreeToRad(bodyOrientation)));
-            ySpeed = (int) Math.Round(speed * Math.Sin(Program.DegreeToRad(bodyOrientation)));
+            _xSpeed = (int) Math.Round(speed * Math.Cos(Program.DegreeToRad(_bodyOrientation)));
+            _ySpeed = (int) Math.Round(speed * Math.Sin(Program.DegreeToRad(_bodyOrientation)));
 
             // ošetření vyjíždění z mapy, při překročení hranice získáme hodnotu hranice
-            body.Location = new Point(Math.Max(CwForm.WorldInfo.LeftOfTheWorld,
-                    Math.Min(CwForm.WorldInfo.RightOfTheWorld, body.Location.X + xSpeed)),
+            _body.Location = new Point(Math.Max(CwForm.WorldInfo.LeftOfTheWorld,
+                    Math.Min(CwForm.WorldInfo.RightOfTheWorld, _body.Location.X + _xSpeed)),
                 Math.Max(CwForm.WorldInfo.TopOfTheWorld,
-                    Math.Min(CwForm.WorldInfo.BottomOfTheWorld, body.Location.Y - ySpeed)));
+                    Math.Min(CwForm.WorldInfo.BottomOfTheWorld, _body.Location.Y - _ySpeed)));
 
-            healthBar.Location = new Point(body.Location.X - 20, body.Location.Y - 20);
+            _healthBar.Location = new Point(_body.Location.X - 20, _body.Location.Y - 20);
             UpdateRadar();
         }
 
@@ -223,22 +223,22 @@ namespace CodeWars.Forms
 
         public void RotateVehicle(int degree)
         {
-            bodyOrientation += degree;
-            bodyOrientation %= 360;
-            body.Image = RotateImg(bitmapBody, -bodyOrientation);
+            _bodyOrientation += degree;
+            _bodyOrientation %= 360;
+            _body.Image = RotateImg(_bitmapBody, -_bodyOrientation);
             UpdateRadar();
         }
 
         public void DecreaseHealth(int value)
         {
-            currHealth -= value;
-            healthRemaining.Width = currHealth;
+            _currHealth -= value;
+            _healthRemaining.Width = _currHealth;
 
             // při prohře vložíme na první místo fronty vhodnou událost
-            if (currHealth <= 0)
+            if (_currHealth <= 0)
             {
-                instructionQueue.Clear();
-                instructionQueue.Enqueue(new GameOver(0, this));
+                InstructionQueue.Clear();
+                InstructionQueue.Enqueue(new GameOver(0, this));
             }
 
             UpdateRadar();
@@ -246,55 +246,55 @@ namespace CodeWars.Forms
 
         public void ResetGunOrientation()
         {
-            gunOrientation = 0;
+            _gunOrientation = 0;
         }
 
         public void RotateGun(int degree)
         {
-            gunOrientation += degree;
-            gunOrientation %= 360;
-            gun.Image = RotateImg(bitmapGun, -gunOrientation);
+            _gunOrientation += degree;
+            _gunOrientation %= 360;
+            _gun.Image = RotateImg(_bitmapGun, -_gunOrientation);
             UpdateRadar();
         }
 
         public void Fire(int energy)
         {
-            var x = body.Location.X + body.Size.Width / 2;
-            var y = body.Location.Y + body.Size.Height / 2;
-            CwForm.bulletList.Add(
-                new Bullet(Program.form, Program.form.GetBullet(), x, y, gunOrientation, energy, this));
+            var x = _body.Location.X + _body.Size.Width / 2;
+            var y = _body.Location.Y + _body.Size.Height / 2;
+            CwForm.BulletList.Add(
+                new Bullet(Program.Form, Program.Form.GetBullet(), x, y, _gunOrientation, energy, this));
             // projektil vznikne u upevnění děla a má za vzor prvek aBullet - visualní reprezentace projektilu
         }
 
         public void RotateRadar(int degree)
         {
-            radarOrientation += degree;
-            radarOrientation %= 360;
-            radar.Image = RotateImg(bitmapRadar, -radarOrientation);
+            _radarOrientation += degree;
+            _radarOrientation %= 360;
+            _radar.Image = RotateImg(_bitmapRadar, -_radarOrientation);
             UpdateRadar();
         }
 
         public void UpdateRadar() // poskytuje hráči informace o nepříteli
         {
-            for (var i = CwForm.playerList.Count - 1; i >= 0; i--)
+            for (var i = CwForm.PlayerList.Count - 1; i >= 0; i--)
             {
-                if (CwForm.playerList[i] == this)
+                if (CwForm.PlayerList[i] == this)
                     continue; // projdeme všechny roboty kromě sebe sama
-                var xCurrentPoint = body.Location.X + body.Size.Width / 2;
-                var yCurrentPoint = body.Location.Y + body.Size.Height / 2;
-                var xEnemyCenter = CwForm.playerList[i].body.Location.X + CwForm.playerList[i].body.Size.Width / 2;
-                var yEnemyCenter = CwForm.playerList[i].body.Location.Y + CwForm.playerList[i].body.Size.Height / 2;
-                var xDirection = (int) Math.Round(10 * Math.Cos(Program.DegreeToRad(radarOrientation)));
-                var yDirection = (int) Math.Round(10 * Math.Sin(Program.DegreeToRad(radarOrientation)));
+                var xCurrentPoint = _body.Location.X + _body.Size.Width / 2;
+                var yCurrentPoint = _body.Location.Y + _body.Size.Height / 2;
+                var xEnemyCenter = CwForm.PlayerList[i]._body.Location.X + CwForm.PlayerList[i]._body.Size.Width / 2;
+                var yEnemyCenter = CwForm.PlayerList[i]._body.Location.Y + CwForm.PlayerList[i]._body.Size.Height / 2;
+                var xDirection = (int) Math.Round(10 * Math.Cos(Program.DegreeToRad(_radarOrientation)));
+                var yDirection = (int) Math.Round(10 * Math.Sin(Program.DegreeToRad(_radarOrientation)));
                 while (true)
                 {
                     // pro každého se zeptáme, zda leží nejvýše 60 jednotek
                     // od přímky určené středem hráčova vozidla a orientací radaru
                     if (Math.Abs(xCurrentPoint - xEnemyCenter) < 60 && Math.Abs(yCurrentPoint - yEnemyCenter) < 60)
                     {
-                        lastSpottedX = xEnemyCenter;
-                        lastSpottedY = yEnemyCenter;
-                        lastSpottedOrientation = radarOrientation;
+                        _lastSpottedX = xEnemyCenter;
+                        _lastSpottedY = yEnemyCenter;
+                        _lastSpottedOrientation = _radarOrientation;
                         break;
                     }
 
@@ -312,10 +312,10 @@ namespace CodeWars.Forms
 
         public void GameOver()
         {
-            currHealth = 0;
-            healthRemaining.Width = 0;
-            maxSpeed = 0;
-            body.Image = SetColor((Bitmap) body.Image, false);
+            _currHealth = 0;
+            _healthRemaining.Width = 0;
+            _maxSpeed = 0;
+            _body.Image = SetColor((Bitmap) _body.Image, false);
         }
     }
 }

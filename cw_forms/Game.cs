@@ -7,8 +7,8 @@ namespace CodeWars.Forms
 {
     public partial class CwForm : Form
     {
-        public static List<Bullet> bulletList; // aktivní projektily
-        public static List<Player> playerList; // aktivní hráči
+        public static List<Bullet> BulletList; // aktivní projektily
+        public static List<Player> PlayerList; // aktivní hráči
 
         public CwForm()
         {
@@ -17,16 +17,16 @@ namespace CodeWars.Forms
             // přiřazení elementů formuláře do vzoru robota
             var robot = new EntireRobot(robot1_name, robot1_body, robot1_gun, robot1_radar, healthBar1, healthCurr1);
 
-            playerList = new List<Player>();
-            for (var i = 0; i < CwMenu.playerCount; i++)
-                new Player(this, robot, 100);
-            for (var i = playerList.Count - 1; i >= 0; i--)
+            PlayerList = new List<Player>();
+            for (var i = 0; i < CwMenu.PlayerCount; i++)
+                PlayerList.Add(new Player(this, robot, 100));
+            for (var i = PlayerList.Count - 1; i >= 0; i--)
             {
-                Parse.SendGrammar(CwMenu.code[i], playerList[i]);
-                Engine.Prepare(playerList[i].complexQueue);
+                Parse.SendGrammar(CwMenu.Code[i], PlayerList[i]);
+                Engine.Prepare(PlayerList[i].ComplexQueue);
             }
 
-            bulletList = new List<Bullet>();
+            BulletList = new List<Bullet>();
         }
 
         public PictureBox GetBullet()
@@ -46,12 +46,12 @@ namespace CodeWars.Forms
 
         private void Debug() // info o směru pohybu, orientaci a počtu aktivních projektilů
         {
-            debug_x.Text = "X axis movement = " + playerList[0].GetAttrib("xSpeed");
-            debug_y.Text = "Y axis movement = " + playerList[0].GetAttrib("ySpeed");
-            orient.Text = "Orientation = " + playerList[0].GetAttrib("bodyOrientation");
-            bulletCount.Text = bulletList.Count.ToString();
-            lastSpottedX.Text = "Last spotted X = " + playerList[0].GetAttrib("lastSpottedX");
-            lastSpottedY.Text = "Last spotted Y = " + playerList[0].GetAttrib("lastSpottedY");
+            debug_x.Text = "X axis movement = " + PlayerList[0].GetAttrib("xSpeed");
+            debug_y.Text = "Y axis movement = " + PlayerList[0].GetAttrib("ySpeed");
+            orient.Text = "Orientation = " + PlayerList[0].GetAttrib("bodyOrientation");
+            bulletCount.Text = BulletList.Count.ToString();
+            lastSpottedX.Text = "Last spotted X = " + PlayerList[0].GetAttrib("lastSpottedX");
+            lastSpottedY.Text = "Last spotted Y = " + PlayerList[0].GetAttrib("lastSpottedY");
         }
 
         //Engine engine;
@@ -60,28 +60,28 @@ namespace CodeWars.Forms
         {
             // v každém ticku provedeme jednu instrukci pro každého aktivního hráče
             Debug();
-            if (Engine.RunSimulation(playerList))
+            if (Engine.RunSimulation(PlayerList))
             {
                 var result = Engine.GetTickCount() == 15000
                     ? MessageBox.Show("Vypršel čas!", "Konec hry")
-                    : MessageBox.Show("Vítěz\nHráč " + playerList[0].GetAttrib("name"), "Konec hry");
+                    : MessageBox.Show("Vítěz\nHráč " + PlayerList[0].GetAttrib("name"), "Konec hry");
                 if (result == DialogResult.OK)
                     Environment.Exit(0);
             }
 
             // zkontrolujeme pohyb aktivních projektilů
-            for (var i = bulletList.Count - 1; i >= 0; i--)
-                if (bulletList[i].ProcessMove())
+            for (var i = BulletList.Count - 1; i >= 0; i--)
+                if (BulletList[i].ProcessMove())
                 {
-                    bulletList[i].ResetBullet();
-                    bulletList.RemoveAt(i);
+                    BulletList[i].ResetBullet();
+                    BulletList.RemoveAt(i);
                 }
         }
 
         public struct EntireRobot // outline pro robota, který se předá jednotlivým instancím
         {
-            private Label name;
-            private PictureBox body, gun, radar, healthBar, healthRemaining;
+            private Label _name;
+            private PictureBox _body, _gun, _radar, _healthBar, _healthRemaining;
 
             public PictureBox GetPictureBox(string attribName)
             {
@@ -92,12 +92,12 @@ namespace CodeWars.Forms
             public EntireRobot(Label name, PictureBox body, PictureBox gun, PictureBox radar, PictureBox healthBar,
                 PictureBox healthRemaining)
             {
-                this.name = name;
-                this.body = body;
-                this.gun = gun;
-                this.radar = radar;
-                this.healthBar = healthBar;
-                this.healthRemaining = healthRemaining;
+                _name = name;
+                _body = body;
+                _gun = gun;
+                _radar = radar;
+                _healthBar = healthBar;
+                _healthRemaining = healthRemaining;
             }
         }
 

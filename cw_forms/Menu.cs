@@ -5,8 +5,9 @@ namespace CodeWars.Forms
 {
     public partial class CwMenu : Form
     {
-        public static int playerCount = 1;
-        public static string[] code = new string[4];
+        public static int PlayerCount = 1;
+        public static string[] Code = new string[4];
+
         public CwMenu()
         {
             InitializeComponent();
@@ -33,7 +34,7 @@ namespace CodeWars.Forms
             player4codeSpace.Visible = false;
             player4Name.Visible = false;
             player4codeSpace.Clear();
-            playerCount = 1;
+            PlayerCount = 1;
         }
 
         private void NoOfPlayers2_CheckedChanged(object sender, EventArgs e)
@@ -48,7 +49,7 @@ namespace CodeWars.Forms
             player4codeSpace.Visible = false;
             player4Name.Visible = false;
             player4codeSpace.Clear();
-            playerCount = 2;
+            PlayerCount = 2;
         }
 
         private void NoOfPlayers3_CheckedChanged(object sender, EventArgs e)
@@ -62,7 +63,7 @@ namespace CodeWars.Forms
             player4codeSpace.Visible = false;
             player4Name.Visible = false;
             player4codeSpace.Clear();
-            playerCount = 3;
+            PlayerCount = 3;
         }
 
         private void NoOfPlayers4_CheckedChanged(object sender, EventArgs e)
@@ -75,20 +76,20 @@ namespace CodeWars.Forms
             player3Name.Visible = true;
             player4codeSpace.Visible = true;
             player4Name.Visible = true;
-            playerCount = 4;
+            PlayerCount = 4;
         }
 
         private void MenuStart_Click(object sender, EventArgs e)
         {
-            code[0] = player1codeSpace.Text;
-            code[1] = player2codeSpace.Text;
-            code[2] = player3codeSpace.Text;
-            code[3] = player4codeSpace.Text;
-            Program.form = new CwForm();
+            Code[0] = player1codeSpace.Text;
+            Code[1] = player2codeSpace.Text;
+            Code[2] = player3codeSpace.Text;
+            Code[3] = player4codeSpace.Text;
+            Program.Form = new CwForm();
             if (debugCheck.Checked)
-                Program.form.ToggleDebug();
+                Program.Form.ToggleDebug();
             Hide();
-            Program.form.ShowDialog();
+            Program.Form.ShowDialog();
             Close();
         }
 
@@ -96,10 +97,10 @@ namespace CodeWars.Forms
         {
             noOfPlayers2.Checked = true;
             player1codeSpace.Text = "TurnRight(45);\nRotateRadarLeft(360);\nRotateGunLeft(var);\n" +
-                "Forward(50);\nRotateRadarLeft(360);\nRotateGunLeft(var);\n" +
-                "Fire(1);\n";
+                                    "Forward(50);\nRotateRadarLeft(360);\nRotateGunLeft(var);\n" +
+                                    "Fire(1);\n";
             player2codeSpace.Text = "RotateRadarLeft(180);\nTurnLeft(180);\nForward(100);" +
-                "RotateGunLeft(var);\nFire(1);\nTurnRight(20);\n";
+                                    "RotateGunLeft(var);\nFire(1);\nTurnRight(20);\n";
         }
     }
 }

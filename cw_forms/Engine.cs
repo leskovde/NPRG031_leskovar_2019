@@ -4,6 +4,8 @@
   	 letní semestr 2018/19 
   	 Programování II NPRG031
 */
+
+using System;
 using System.Collections.Generic;
 
 namespace CodeWars.Forms
@@ -11,231 +13,229 @@ namespace CodeWars.Forms
     internal class Engine // prostředí pro spouštění událostí diskretní simulace
     {
         private static int _tickCount;
+
         public static int GetTickCount()
         {
             return _tickCount;
         }
+
         private static void Deconstruct(Instruction complexCommand)
         {
             // rozkládá instrukce, které nelze vykonat okamžitě, na snazší operace
-            int moveSpeed = complexCommand.player.GetAttrib("maxSpeed"); // rychlost slouží jako limit pro danou operaci
+            var moveSpeed = complexCommand.Player.GetAttrib("maxSpeed"); // rychlost slouží jako limit pro danou operaci
             int numberOfTimes, remainingUnits;
             switch (complexCommand.GetId())
             {
                 case Instructions.Ahead:
-                    numberOfTimes = complexCommand.mainStat / moveSpeed; // určíme počet jednoduchých instrukcí
-                    remainingUnits = complexCommand.mainStat % moveSpeed; // nezapomeneme na to, co zbyde
+                    numberOfTimes = complexCommand.MainStat / moveSpeed; // určíme počet jednoduchých instrukcí
+                    remainingUnits = complexCommand.MainStat % moveSpeed; // nezapomeneme na to, co zbyde
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new Ahead(moveSpeed,
-                            complexCommand.player)); // frontu naplníme vícero instancemi dané instrukce
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new Ahead(moveSpeed,
+                            complexCommand.Player)); // frontu naplníme vícero instancemi dané instrukce
 
-                    complexCommand.player.instructionQueue.Enqueue(new Ahead(remainingUnits,
-                            complexCommand.player)); // nakonec přidáme i zbytek
+                    complexCommand.Player.InstructionQueue.Enqueue(new Ahead(remainingUnits,
+                        complexCommand.Player)); // nakonec přidáme i zbytek
                     break;
                 case Instructions.Back:
                     // všechny zbylé (kromě fire a game over) instrukce analogicky
-                    numberOfTimes = complexCommand.mainStat / moveSpeed;
-                    remainingUnits = complexCommand.mainStat % moveSpeed;
+                    numberOfTimes = complexCommand.MainStat / moveSpeed;
+                    remainingUnits = complexCommand.MainStat % moveSpeed;
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new Back(moveSpeed,
-                            complexCommand.player));
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new Back(moveSpeed,
+                            complexCommand.Player));
 
-                    complexCommand.player.instructionQueue.Enqueue(new Back(remainingUnits,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new Back(remainingUnits,
+                        complexCommand.Player));
                     break;
                 case Instructions.Left:
-                    numberOfTimes = complexCommand.mainStat / (moveSpeed / 2);
-                    remainingUnits = complexCommand.mainStat % (moveSpeed / 2);
+                    numberOfTimes = complexCommand.MainStat / (moveSpeed / 2);
+                    remainingUnits = complexCommand.MainStat % (moveSpeed / 2);
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new TurnLeft(moveSpeed / 2,
-                            complexCommand.player));
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new TurnLeft(moveSpeed / 2,
+                            complexCommand.Player));
 
-                    complexCommand.player.instructionQueue.Enqueue(new TurnLeft(remainingUnits,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new TurnLeft(remainingUnits,
+                        complexCommand.Player));
                     break;
                 case Instructions.Right:
-                    numberOfTimes = complexCommand.mainStat / (moveSpeed / 2);
-                    remainingUnits = complexCommand.mainStat % (moveSpeed / 2);
+                    numberOfTimes = complexCommand.MainStat / (moveSpeed / 2);
+                    remainingUnits = complexCommand.MainStat % (moveSpeed / 2);
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new TurnRight(moveSpeed / 2,
-                            complexCommand.player));
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new TurnRight(moveSpeed / 2,
+                            complexCommand.Player));
 
-                    complexCommand.player.instructionQueue.Enqueue(new TurnRight(remainingUnits,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new TurnRight(remainingUnits,
+                        complexCommand.Player));
                     break;
                 case Instructions.Fire:
                     // instrukce je okamžitá, nic nerozkládáme
-                    complexCommand.player.instructionQueue.Enqueue(new Fire(complexCommand.mainStat,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new Fire(complexCommand.MainStat,
+                        complexCommand.Player));
                     break;
                 case Instructions.GunLeft:
                     // pokud při parsování narazíme na var, přeneseme jej jako -1 zde
-                    if (complexCommand.mainStat == -1)
+                    if (complexCommand.MainStat == -1)
                     {
                         // posíláme dále s -1, jinak pokračujeme analogicky
-                        complexCommand.player.instructionQueue.Enqueue(new GunLeft(-1,
-                            complexCommand.player));
+                        complexCommand.Player.InstructionQueue.Enqueue(new GunLeft(-1,
+                            complexCommand.Player));
                         break;
                     }
 
-                    numberOfTimes = complexCommand.mainStat / moveSpeed;
-                    remainingUnits = complexCommand.mainStat % moveSpeed;
+                    numberOfTimes = complexCommand.MainStat / moveSpeed;
+                    remainingUnits = complexCommand.MainStat % moveSpeed;
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new GunLeft(moveSpeed,
-                            complexCommand.player));
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new GunLeft(moveSpeed,
+                            complexCommand.Player));
 
-                    complexCommand.player.instructionQueue.Enqueue(new GunLeft(remainingUnits,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new GunLeft(remainingUnits,
+                        complexCommand.Player));
                     break;
                 case Instructions.GunRight:
                     // případný var posíláme dále s -1, posíláme jako gunLeft, jelikož na směru nezáleží
-                    if (complexCommand.mainStat == -1)
+                    if (complexCommand.MainStat == -1)
                     {
-                        complexCommand.player.instructionQueue.Enqueue(new GunLeft(-1,
-                            complexCommand.player));
+                        complexCommand.Player.InstructionQueue.Enqueue(new GunLeft(-1,
+                            complexCommand.Player));
                         break;
                     }
 
-                    numberOfTimes = complexCommand.mainStat / moveSpeed;
-                    remainingUnits = complexCommand.mainStat % moveSpeed;
+                    numberOfTimes = complexCommand.MainStat / moveSpeed;
+                    remainingUnits = complexCommand.MainStat % moveSpeed;
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new GunRight(moveSpeed,
-                            complexCommand.player));
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new GunRight(moveSpeed,
+                            complexCommand.Player));
 
-                    complexCommand.player.instructionQueue.Enqueue(new GunRight(remainingUnits,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new GunRight(remainingUnits,
+                        complexCommand.Player));
                     break;
                 case Instructions.RadarLeft:
-                    numberOfTimes = complexCommand.mainStat / (moveSpeed * 2);
-                    remainingUnits = complexCommand.mainStat % (moveSpeed * 2);
+                    numberOfTimes = complexCommand.MainStat / (moveSpeed * 2);
+                    remainingUnits = complexCommand.MainStat % (moveSpeed * 2);
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new RadarLeft(moveSpeed * 2,
-                            complexCommand.player));
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new RadarLeft(moveSpeed * 2,
+                            complexCommand.Player));
 
-                    complexCommand.player.instructionQueue.Enqueue(new RadarLeft(remainingUnits,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new RadarLeft(remainingUnits,
+                        complexCommand.Player));
                     break;
                 case Instructions.RadarRight:
-                    numberOfTimes = complexCommand.mainStat / (moveSpeed * 2);
-                    remainingUnits = complexCommand.mainStat % (moveSpeed * 2);
+                    numberOfTimes = complexCommand.MainStat / (moveSpeed * 2);
+                    remainingUnits = complexCommand.MainStat % (moveSpeed * 2);
 
-                    for (int i = 1; i <= numberOfTimes; i++)
-                    {
-                        complexCommand.player.instructionQueue.Enqueue(new RadarRight(moveSpeed * 2,
-                            complexCommand.player));
-                    }
+                    for (var i = 1; i <= numberOfTimes; i++)
+                        complexCommand.Player.InstructionQueue.Enqueue(new RadarRight(moveSpeed * 2,
+                            complexCommand.Player));
 
-                    complexCommand.player.instructionQueue.Enqueue(new RadarRight(remainingUnits,
-                            complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new RadarRight(remainingUnits,
+                        complexCommand.Player));
                     break;
                 case Instructions.GameOver:
                     // instrukce opět okamžitá
-                    complexCommand.player.instructionQueue.Enqueue(new GameOver(complexCommand.mainStat,
-                           complexCommand.player));
+                    complexCommand.Player.InstructionQueue.Enqueue(new GameOver(complexCommand.MainStat,
+                        complexCommand.Player));
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
+
         public static bool Execute(Instruction instr) // vykoná jednoduchou instrukci
         {
-            bool playerIsNotDestroyed = true; // pro případ, kdyby hráč prohrál, abychom instrukci nevraceli do fronty
+            var playerIsNotDestroyed = true; // pro případ, kdyby hráč prohrál, abychom instrukci nevraceli do fronty
             switch (instr.GetId())
             {
                 case Instructions.Ahead:
-                    instr.player.MoveForward(instr.mainStat);
+                    instr.Player.MoveForward(instr.MainStat);
                     break;
                 case Instructions.Back:
-                    instr.player.MoveBackwards(instr.mainStat);
+                    instr.Player.MoveBackwards(instr.MainStat);
                     break;
                 case Instructions.Left:
-                    instr.player.RotateVehicle(instr.mainStat);
+                    instr.Player.RotateVehicle(instr.MainStat);
                     break;
                 case Instructions.Right:
-                    instr.player.RotateVehicle(-instr.mainStat);
+                    instr.Player.RotateVehicle(-instr.MainStat);
                     break;
                 case Instructions.Fire:
-                    instr.player.Fire(instr.mainStat);
+                    instr.Player.Fire(instr.MainStat);
                     break;
                 case Instructions.GunLeft:
                     // řešíme případ s var, jelikož je bitmapa radaru otočená, je nutné s ní dělo srovnat
                     // proto orientaci násobíme -1 a odčítáme 180
-                    if (instr.mainStat == -1)
+                    if (instr.MainStat == -1)
                     {
-                        instr.player.ResetGunOrientation();
-                        instr.player.RotateGun(-1 * (instr.player.GetAttrib("lastSpottedOrientation") - 180));
+                        instr.Player.ResetGunOrientation();
+                        instr.Player.RotateGun(-1 * (instr.Player.GetAttrib("lastSpottedOrientation") - 180));
                     }
-                    instr.player.RotateGun(instr.mainStat);
+
+                    instr.Player.RotateGun(instr.MainStat);
                     break;
                 case Instructions.GunRight:
-                    instr.player.RotateGun(-instr.mainStat);
+                    instr.Player.RotateGun(-instr.MainStat);
                     break;
                 case Instructions.RadarLeft:
-                    instr.player.RotateRadar(instr.mainStat);
+                    instr.Player.RotateRadar(instr.MainStat);
                     break;
                 case Instructions.RadarRight:
-                    instr.player.RotateRadar(-instr.mainStat);
+                    instr.Player.RotateRadar(-instr.MainStat);
                     break;
                 case Instructions.GameOver:
                     // hráč byl vyřazen, proto ho vyjmeme ze seznamu aktivních hráčů a obarvíme černě
                     playerIsNotDestroyed = false;
-                    instr.player.GameOver();
-                    CwForm.playerList.Remove(instr.player); // hráčovy instrukce se nebudou dále vykonávat
+                    instr.Player.GameOver();
+                    CwForm.PlayerList.Remove(instr.Player); // hráčovy instrukce se nebudou dále vykonávat
 
                     // zbyde-li jediný hráč, vracíme true, což povede k ukončení programu
-                    if (CwForm.playerList.Count == 1)
+                    if (CwForm.PlayerList.Count == 1)
                     {
-                        var lastPlayer = CwForm.playerList[0];
-                        lastPlayer.instructionQueue.Clear();
-                        lastPlayer.instructionQueue.Enqueue(new RadarLeft(lastPlayer.GetAttrib("maxSpeed") * 2, lastPlayer));
+                        var lastPlayer = CwForm.PlayerList[0];
+                        lastPlayer.InstructionQueue.Clear();
+                        lastPlayer.InstructionQueue.Enqueue(new RadarLeft(lastPlayer.GetAttrib("maxSpeed") * 2,
+                            lastPlayer));
                         return true;
                     }
+
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+
             if (playerIsNotDestroyed)
-                instr.player.instructionQueue.Enqueue(instr); // po provedení vracíme zpět do fronty
+                instr.Player.InstructionQueue.Enqueue(instr); // po provedení vracíme zpět do fronty
             return false;
         }
+
         public static void Prepare(Queue<Instruction> complexQueue)
-        {   // převede frontu těžkých instrukcí na frontu lehkých
+        {
+            // převede frontu těžkých instrukcí na frontu lehkých
             while (complexQueue.Count != 0)
             {
-                Instruction complexCommand = complexQueue.Dequeue();
+                var complexCommand = complexQueue.Dequeue();
                 Deconstruct(complexCommand);
             }
         }
+
         public static bool RunSimulation(List<Player> playerList) // pro každého hráče provede jednu instrukci
-        {   // počítáme ticky hlavního timeru, po 150 sekundách vracíme true a hra končí
+        {
+            // počítáme ticky hlavního timeru, po 150 sekundách vracíme true a hra končí
             if (_tickCount > 15000)
                 return true;
-            for (int i = playerList.Count - 1; i >= 0; i--)
+            for (var i = playerList.Count - 1; i >= 0; i--)
             {
-                Instruction currentCommand = playerList[i].instructionQueue.Dequeue();
+                var currentCommand = playerList[i].InstructionQueue.Dequeue();
                 if (Execute(currentCommand))
-                {
                     // vrátil-li game over true (zbyl jeden hráč), vratíme true a hra končí
                     return true;
-                }
             }
+
             _tickCount++;
             return false;
         }
