@@ -55,11 +55,11 @@ namespace CodeWars.Forms
             // dynamické vytvoření prvků formuláře a přiřazení ze vzoru
             var nameLabel = new Label();
 
-            _body = PicBoxAssign(form, robot, "body");
-            _gun = PicBoxAssign(form, robot, "gun");
-            _radar = PicBoxAssign(form, robot, "radar");
-            _healthBar = PicBoxAssign(form, robot, "healthBar");
-            _healthRemaining = PicBoxAssign(form, robot, "healthRemaining");
+            _body = PicBoxAssign(form, robot, "_body");
+            _gun = PicBoxAssign(form, robot, "_gun");
+            _radar = PicBoxAssign(form, robot, "_radar");
+            _healthBar = PicBoxAssign(form, robot, "_healthBar");
+            _healthRemaining = PicBoxAssign(form, robot, "_healthRemaining");
 
             // vytvoření náhodného bodu, na kterém se instance při začátku hry objeví
             while (true)

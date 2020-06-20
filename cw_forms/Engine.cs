@@ -22,7 +22,7 @@ namespace CodeWars.Forms
         private static void Deconstruct(Instruction complexCommand)
         {
             // rozkládá instrukce, které nelze vykonat okamžitě, na snazší operace
-            var moveSpeed = complexCommand.Player.GetAttrib("maxSpeed"); // rychlost slouží jako limit pro danou operaci
+            var moveSpeed = complexCommand.Player.GetAttrib("_maxSpeed"); // rychlost slouží jako limit pro danou operaci
             int numberOfTimes, remainingUnits;
             switch (complexCommand.GetId())
             {
@@ -173,7 +173,7 @@ namespace CodeWars.Forms
                     if (instr.MainStat == -1)
                     {
                         instr.Player.ResetGunOrientation();
-                        instr.Player.RotateGun(-1 * (instr.Player.GetAttrib("lastSpottedOrientation") - 180));
+                        instr.Player.RotateGun(-1 * (instr.Player.GetAttrib("_lastSpottedOrientation") - 180));
                     }
 
                     instr.Player.RotateGun(instr.MainStat);
@@ -198,7 +198,7 @@ namespace CodeWars.Forms
                     {
                         var lastPlayer = CwForm.PlayerList[0];
                         lastPlayer.InstructionQueue.Clear();
-                        lastPlayer.InstructionQueue.Enqueue(new RadarLeft(lastPlayer.GetAttrib("maxSpeed") * 2,
+                        lastPlayer.InstructionQueue.Enqueue(new RadarLeft(lastPlayer.GetAttrib("_maxSpeed") * 2,
                             lastPlayer));
                         return true;
                     }

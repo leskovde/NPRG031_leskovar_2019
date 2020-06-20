@@ -46,12 +46,12 @@ namespace CodeWars.Forms
 
         private void Debug() // info o směru pohybu, orientaci a počtu aktivních projektilů
         {
-            debug_x.Text = "X axis movement = " + PlayerList[0].GetAttrib("xSpeed");
-            debug_y.Text = "Y axis movement = " + PlayerList[0].GetAttrib("ySpeed");
-            orient.Text = "Orientation = " + PlayerList[0].GetAttrib("bodyOrientation");
+            debug_x.Text = "X axis movement = " + PlayerList[0].GetAttrib("_xSpeed");
+            debug_y.Text = "Y axis movement = " + PlayerList[0].GetAttrib("_ySpeed");
+            orient.Text = "Orientation = " + PlayerList[0].GetAttrib("_bodyOrientation");
             bulletCount.Text = BulletList.Count.ToString();
-            lastSpottedX.Text = "Last spotted X = " + PlayerList[0].GetAttrib("lastSpottedX");
-            lastSpottedY.Text = "Last spotted Y = " + PlayerList[0].GetAttrib("lastSpottedY");
+            lastSpottedX.Text = "Last spotted X = " + PlayerList[0].GetAttrib("_lastSpottedX");
+            lastSpottedY.Text = "Last spotted Y = " + PlayerList[0].GetAttrib("_lastSpottedY");
         }
 
         //Engine engine;
@@ -64,7 +64,7 @@ namespace CodeWars.Forms
             {
                 var result = Engine.GetTickCount() == 15000
                     ? MessageBox.Show("Vypršel čas!", "Konec hry")
-                    : MessageBox.Show("Vítěz\nHráč " + PlayerList[0].GetAttrib("name"), "Konec hry");
+                    : MessageBox.Show("Vítěz\nHráč " + PlayerList[0].GetAttrib("_name"), "Konec hry");
                 if (result == DialogResult.OK)
                     Environment.Exit(0);
             }
