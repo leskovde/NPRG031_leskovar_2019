@@ -123,21 +123,6 @@ namespace CodeWars.Forms
             return component;
         }
 
-        // konzolový výpis aktuálního stavu robota
-/*
-        public void DebugInfo()
-        {
-            Console.WriteLine("Robot: {0}", nameof(Player));
-            Console.WriteLine("Max. Health: {0}", maxHealth);
-            Console.WriteLine("Health: {0}", currHealth);
-            Console.WriteLine("Speed: {0}", maxSpeed);
-            Console.WriteLine("Orientation: {0}", bodyOrientation);
-            Console.WriteLine("Gun Orient.: {0}", gunOrientation);
-            Console.WriteLine("Radar Orient.: {0}", radarOrientation);
-            //Console.WriteLine("Bullet Damage: {0}", projDamage);
-            Console.WriteLine("");
-        }
-*/
         public static Bitmap SetColor(Bitmap bmp, bool newInstance) // obarvení libovolné bitmapy
         {
             var r = new Random(); // barvíme náhodně

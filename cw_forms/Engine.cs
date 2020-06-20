@@ -22,8 +22,7 @@ namespace CodeWars.Forms
             int numberOfTimes, remainingUnits;
             switch (complexCommand.GetId())
             {
-                case 1:
-                    // instrukce ahead
+                case Instructions.Ahead:
                     numberOfTimes = complexCommand.mainStat / moveSpeed; // určíme počet jednoduchých instrukcí
                     remainingUnits = complexCommand.mainStat % moveSpeed; // nezapomeneme na to, co zbyde
 
@@ -36,8 +35,8 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new Ahead(remainingUnits,
                             complexCommand.player)); // nakonec přidáme i zbytek
                     break;
-                case 2:
-                    // instrukce back - všechny zbylé (kromě fire a game over) instrukce analogicky
+                case Instructions.Back:
+                    // všechny zbylé (kromě fire a game over) instrukce analogicky
                     numberOfTimes = complexCommand.mainStat / moveSpeed;
                     remainingUnits = complexCommand.mainStat % moveSpeed;
 
@@ -50,8 +49,7 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new Back(remainingUnits,
                             complexCommand.player));
                     break;
-                case 3:
-                    // instrukce left
+                case Instructions.Left:
                     numberOfTimes = complexCommand.mainStat / (moveSpeed / 2);
                     remainingUnits = complexCommand.mainStat % (moveSpeed / 2);
 
@@ -64,8 +62,7 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new TurnLeft(remainingUnits,
                             complexCommand.player));
                     break;
-                case 4:
-                    // instrukce right
+                case Instructions.Right:
                     numberOfTimes = complexCommand.mainStat / (moveSpeed / 2);
                     remainingUnits = complexCommand.mainStat % (moveSpeed / 2);
 
@@ -78,13 +75,12 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new TurnRight(remainingUnits,
                             complexCommand.player));
                     break;
-                case 5:
-                    // instrukce fire - je okamžitá, nic nerozkládáme
+                case Instructions.Fire:
+                    // instrukce je okamžitá, nic nerozkládáme
                     complexCommand.player.instructionQueue.Enqueue(new Fire(complexCommand.mainStat,
                             complexCommand.player));
                     break;
-                case 6:
-                    // instrukce gun left
+                case Instructions.GunLeft:
                     // pokud při parsování narazíme na var, přeneseme jej jako -1 zde
                     if (complexCommand.mainStat == -1)
                     {
@@ -106,8 +102,7 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new GunLeft(remainingUnits,
                             complexCommand.player));
                     break;
-                case 7:
-                    // instrukce gun right
+                case Instructions.GunRight:
                     // případný var posíláme dále s -1, posíláme jako gunLeft, jelikož na směru nezáleží
                     if (complexCommand.mainStat == -1)
                     {
@@ -128,8 +123,7 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new GunRight(remainingUnits,
                             complexCommand.player));
                     break;
-                case 8:
-                    // instrukce radar left
+                case Instructions.RadarLeft:
                     numberOfTimes = complexCommand.mainStat / (moveSpeed * 2);
                     remainingUnits = complexCommand.mainStat % (moveSpeed * 2);
 
@@ -142,8 +136,7 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new RadarLeft(remainingUnits,
                             complexCommand.player));
                     break;
-                case 9:
-                    // instrukce radar right
+                case Instructions.RadarRight:
                     numberOfTimes = complexCommand.mainStat / (moveSpeed * 2);
                     remainingUnits = complexCommand.mainStat % (moveSpeed * 2);
 
@@ -156,8 +149,8 @@ namespace CodeWars.Forms
                     complexCommand.player.instructionQueue.Enqueue(new RadarRight(remainingUnits,
                             complexCommand.player));
                     break;
-                case 10:
-                    // instrukce game over - opět okamžitá
+                case Instructions.GameOver:
+                    // instrukce opět okamžitá
                     complexCommand.player.instructionQueue.Enqueue(new GameOver(complexCommand.mainStat,
                            complexCommand.player));
                     break;
@@ -165,31 +158,25 @@ namespace CodeWars.Forms
         }
         public static bool Execute(Instruction instr) // vykoná jednoduchou instrukci
         {
-            bool gameNotOver = true; // pro případ, kdyby hráč prohrál, abychom instrukci nevraceli do fronty
+            bool playerIsNotDestroyed = true; // pro případ, kdyby hráč prohrál, abychom instrukci nevraceli do fronty
             switch (instr.GetId())
             {
-                case 1:
-                    // ahead
+                case Instructions.Ahead:
                     instr.player.MoveForward(instr.mainStat);
                     break;
-                case 2:
-                    // back
+                case Instructions.Back:
                     instr.player.MoveBackwards(instr.mainStat);
                     break;
-                case 3:
-                    // left
+                case Instructions.Left:
                     instr.player.RotateVehicle(instr.mainStat);
                     break;
-                case 4:
-                    // right
+                case Instructions.Right:
                     instr.player.RotateVehicle(-instr.mainStat);
                     break;
-                case 5:
-                    // fire
+                case Instructions.Fire:
                     instr.player.Fire(instr.mainStat);
                     break;
-                case 6:
-                    // gun left
+                case Instructions.GunLeft:
                     // řešíme případ s var, jelikož je bitmapa radaru otočená, je nutné s ní dělo srovnat
                     // proto orientaci násobíme -1 a odčítáme 180
                     if (instr.mainStat == -1)
@@ -199,33 +186,32 @@ namespace CodeWars.Forms
                     }
                     instr.player.RotateGun(instr.mainStat);
                     break;
-                case 7:
-                    // gun right
+                case Instructions.GunRight:
                     instr.player.RotateGun(-instr.mainStat);
                     break;
-                case 8:
-                    // radar left
+                case Instructions.RadarLeft:
                     instr.player.RotateRadar(instr.mainStat);
                     break;
-                case 9:
-                    // radar right
-                    instr.player.RotateGun(-instr.mainStat);
+                case Instructions.RadarRight:
+                    instr.player.RotateRadar(-instr.mainStat);
                     break;
-                case 10:
-                    // game over
+                case Instructions.GameOver:
                     // hráč byl vyřazen, proto ho vyjmeme ze seznamu aktivních hráčů a obarvíme černě
-                    gameNotOver = false;
+                    playerIsNotDestroyed = false;
                     instr.player.GameOver();
                     CwForm.playerList.Remove(instr.player); // hráčovy instrukce se nebudou dále vykonávat
 
                     // zbyde-li jediný hráč, vracíme true, což povede k ukončení programu
                     if (CwForm.playerList.Count == 1)
                     {
+                        var lastPlayer = CwForm.playerList[0];
+                        lastPlayer.instructionQueue.Clear();
+                        lastPlayer.instructionQueue.Enqueue(new RadarLeft(lastPlayer.GetAttrib("maxSpeed") * 2, lastPlayer));
                         return true;
                     }
                     break;
             }
-            if (gameNotOver)
+            if (playerIsNotDestroyed)
                 instr.player.instructionQueue.Enqueue(instr); // po provedení vracíme zpět do fronty
             return false;
         }
